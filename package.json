@@ -3,13 +3,23 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "api": "nx serve api"
+    "api": "nx serve api",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev --name autoGenerate",
+    "db:view": "prisma studio",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "docker:db:up": "docker run --name postgres -e POSTGRES_USER=root -e POSTGRES_PASSWORD=bye -e POSTGRES_DB=cms -p 5432:5432 -d postgres:12-alpine",
+    "docker:db:status": "docker ps",
+    "docker:db:down": "docker rm -f postgres",
+    "postinstall": "npm run db:generate"
   },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
+    "@prisma/client": "^6.6.0",
     "axios": "^1.6.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
@@ -38,6 +48,7 @@
     "jest-environment-node": "^29.7.0",
     "nx": "20.8.0",
     "prettier": "^2.6.2",
+    "prisma": "^6.6.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
