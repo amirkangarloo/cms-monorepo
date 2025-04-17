@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { DbModule } from 'apps/api/src/db/db.module';
 
 @Module({
-  imports: [],
+  imports: [DbModule],
   controllers: [],
   providers: [],
 })
