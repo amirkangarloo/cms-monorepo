@@ -5,6 +5,9 @@ dist
 tmp
 out-tsc
 
+# Environment Files
+.env
+
 # dependencies
 node_modules
 
