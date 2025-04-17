@@ -7,3 +7,5 @@ This is a interview project for Backend Developer position. In this project, we 
 - PostgreSQL
 - Prisma
 - Docker
+- CQRS
+- DDD (Domain Driven Design)
