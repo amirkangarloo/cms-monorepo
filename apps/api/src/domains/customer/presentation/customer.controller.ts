@@ -14,7 +14,7 @@ import {
 } from 'apps/api/src/domains/customer/application/dto';
 import { CustomerService } from 'apps/api/src/domains/customer/presentation/customer.service';
 
-@Controller('customer')
+@Controller({ path: 'customers', version: '1' })
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
