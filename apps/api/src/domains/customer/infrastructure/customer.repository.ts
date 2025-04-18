@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DbService } from 'apps/api/src/db/db.service';
 import { Customer as PrismaCustomer } from '@prisma/client';
 import { Customer } from 'apps/api/src/domains/customer/domain/customer.entity';
@@ -9,21 +9,37 @@ export class CustomerRepository {
 
     async findAll(): Promise<Customer[]> {
         const customers = await this.prisma.customer.findMany();
-        return customers.map(c => this.mapToEntity(c));
+
+        return customers.map((c) => this.mapToEntity(c));
     }
 
-    async findById(id: string): Promise<Customer | null> {
+    async findById(id: string): Promise<Customer> {
         const c = await this.prisma.customer.findUnique({ where: { id } });
-        return c ? this.mapToEntity(c) : null;
+        if (!c) {
+            throw new NotFoundException(`Customer with id ${id} not found`);
+        }
+
+        return this.mapToEntity(c);
     }
 
     async create(customer: Partial<Customer>): Promise<Customer> {
-        const c = await this.prisma.customer.create({ data: { address: customer.address, email: customer.email, name: customer.name } });
+        const c = await this.prisma.customer.create({
+            data: {
+                address: customer.address,
+                email: customer.email,
+                name: customer.name,
+            },
+        });
+
         return this.mapToEntity(c);
     }
 
     async update(id: string, customer: Partial<Customer>): Promise<Customer> {
-        const c = await this.prisma.customer.update({ where: { id }, data: customer });
+        const c = await this.prisma.customer.update({
+            where: { id },
+            data: customer,
+        });
+
         return this.mapToEntity(c);
     }
 
@@ -32,6 +48,13 @@ export class CustomerRepository {
     }
 
     private mapToEntity(customer: PrismaCustomer): Customer {
-        return new Customer(customer.id, customer.name, customer.email, customer.address, customer.createdAt, customer.updatedAt);
+        return new Customer(
+            customer.id,
+            customer.name,
+            customer.email,
+            customer.address,
+            customer.createdAt,
+            customer.updatedAt
+        );
     }
 }
