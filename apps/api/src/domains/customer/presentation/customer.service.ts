@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCustomerCommand } from 'apps/api/src/domains/customer/application/commands/create-customer.command';
 import { DeleteCustomerCommand } from 'apps/api/src/domains/customer/application/commands/delete-customer.command';
@@ -29,10 +29,21 @@ export class CustomerService {
   }
 
   async getById(payload: CustomerIdRequestDto) {
-    return this.queryBus.execute(new GetCustomerByIdQuery(payload.customerId));
+    const customer = await this.queryBus.execute(
+      new GetCustomerByIdQuery(payload.customerId)
+    );
+    if (!customer) {
+      throw new NotFoundException(
+        `Customer with id ${payload.customerId} not found`
+      );
+    }
+
+    return customer;
   }
 
   async update(payload: UpdateCustomerRequestDto & CustomerIdRequestDto) {
+    await this.checkCustomerExists(payload.customerId);
+
     return this.commandBus.execute(
       new UpdateCustomerCommand(
         payload.customerId,
@@ -44,9 +55,21 @@ export class CustomerService {
   }
 
   async delete(payload: CustomerIdRequestDto) {
+    await this.checkCustomerExists(payload.customerId);
+
     await this.commandBus.execute(
       new DeleteCustomerCommand(payload.customerId)
     );
+
     return { message: 'Customer deleted' };
+  }
+
+  private async checkCustomerExists(customerId: string): Promise<void> {
+    const customer = await this.queryBus.execute(
+      new GetCustomerByIdQuery(customerId)
+    );
+    if (!customer) {
+      throw new NotFoundException(`Customer with id ${customerId} not found`);
+    }
   }
 }
