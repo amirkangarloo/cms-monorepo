@@ -23,6 +23,14 @@ export class TransactionRepository {
     return this.mapToEntity(t);
   }
 
+  async findById(id: string): Promise<Transaction | null> {
+    const t = await this.prisma.transaction.findUnique({
+      where: { id },
+    });
+
+    return t ? this.mapToEntity(t) : null;
+  }
+
   async update(
     id: string,
     transaction: Partial<Transaction>

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { TransactionStatus } from '@prisma/client';
 import {
   PayRequestDto,
   PayResponseDto,
@@ -19,6 +20,9 @@ export class StripePaymentService implements IPaymentGateway {
     // TODO: Implement the logic to verify the payment using Stripe
     // This is a mock implementation.
 
-    return { status: 'SUCCESS', transactionId: payload.transactionId };
+    return {
+      status: TransactionStatus.SUCCEEDED,
+      transactionId: payload.transactionId,
+    };
   }
 }

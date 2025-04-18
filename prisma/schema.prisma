@@ -59,7 +59,7 @@ enum OrderStatus {
 
 enum TransactionStatus {
   PENDING
-  COMPLETED
+  SUCCEEDED
   FAILED
 }
 
