@@ -1,16 +1,19 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateOrderRequestDto {
-  @IsString()
+  @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
-  name: string;
+  amount: number;
 
   @IsString()
-  @IsEmail()
+  @IsUUID()
   @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  address: string;
+  customerId: string;
 }

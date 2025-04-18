@@ -8,11 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 import {
-  CreateCustomerRequestDto,
-  CustomerIdRequestDto,
-  UpdateCustomerRequestDto,
-} from 'apps/api/src/domains/customer/application/dto';
-import { CustomerService } from 'apps/api/src/domains/customer/presentation/customer.service';
+  CreateOrderRequestDto,
+  OrderIdRequestDto,
+  UpdateOrderRequestDto,
+} from 'apps/api/src/domains/order/application/dto';
+import { OrderService } from 'apps/api/src/domains/order/presentation/order.service';
 
 @Controller({ path: 'orders', version: '1' })
 export class OrderController {
@@ -24,25 +24,25 @@ export class OrderController {
   }
 
   @Post()
-  async create(@Body() body: CreateCustomerRequestDto) {
+  async create(@Body() body: CreateOrderRequestDto) {
     return this.orderService.create(body);
   }
 
-  @Get(':customerId')
-  async getById(@Param() param: CustomerIdRequestDto) {
+  @Get(':orderId')
+  async getById(@Param() param: OrderIdRequestDto) {
     return this.orderService.getById(param);
   }
 
-  @Put(':customerId')
+  @Put(':orderId')
   async update(
-    @Param() param: CustomerIdRequestDto,
-    @Body() body: UpdateCustomerRequestDto
+    @Param() param: OrderIdRequestDto,
+    @Body() body: UpdateOrderRequestDto
   ) {
     return this.orderService.update({ ...param, ...body });
   }
 
-  @Delete(':customerId')
-  async delete(@Param() param: CustomerIdRequestDto) {
+  @Delete(':orderId')
+  async delete(@Param() param: OrderIdRequestDto) {
     return this.orderService.delete(param);
   }
 }

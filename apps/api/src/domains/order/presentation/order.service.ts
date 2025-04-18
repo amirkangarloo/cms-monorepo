@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateCustomerCommand } from 'apps/api/src/domains/customer/application/commands/create-customer.command';
-import { DeleteCustomerCommand } from 'apps/api/src/domains/customer/application/commands/delete-customer.command';
-import { UpdateCustomerCommand } from 'apps/api/src/domains/customer/application/commands/update-customer.command';
+import { CreateOrderCommand } from 'apps/api/src/domains/order/application/commands/create-order.command';
+import { DeleteOrderCommand } from 'apps/api/src/domains/order/application/commands/delete-order.command';
+import { UpdateOrderCommand } from 'apps/api/src/domains/order/application/commands/update-order.command';
 import {
-  CreateCustomerRequestDto,
-  CustomerIdRequestDto,
-  UpdateCustomerRequestDto,
-} from 'apps/api/src/domains/customer/application/dto';
-import { GetCustomerByIdQuery } from 'apps/api/src/domains/customer/application/queries/get-customer-by-id.query';
-import { GetCustomersQuery } from 'apps/api/src/domains/customer/application/queries/get-customers.query';
+  CreateOrderRequestDto,
+  OrderIdRequestDto,
+  UpdateOrderRequestDto,
+} from 'apps/api/src/domains/order/application/dto';
+import { GetOrderByIdQuery } from 'apps/api/src/domains/order/application/queries/get-order-by-id.query';
+import { GetOrderQuery } from 'apps/api/src/domains/order/application/queries/get-order.query';
 
 @Injectable()
 export class OrderService {
@@ -19,54 +19,51 @@ export class OrderService {
   ) {}
 
   async getAll() {
-    return this.queryBus.execute(new GetCustomersQuery());
+    return this.queryBus.execute(new GetOrderQuery());
   }
 
-  async create(payload: CreateCustomerRequestDto) {
+  async create(payload: CreateOrderRequestDto) {
     return this.commandBus.execute(
-      new CreateCustomerCommand(payload.name, payload.email, payload.address)
+      new CreateOrderCommand(payload.amount, payload.customerId)
     );
   }
 
-  async getById(payload: CustomerIdRequestDto) {
-    const customer = await this.queryBus.execute(
-      new GetCustomerByIdQuery(payload.orderId)
+  async getById(payload: OrderIdRequestDto) {
+    const order = await this.queryBus.execute(
+      new GetOrderByIdQuery(payload.orderId)
     );
-    if (!customer) {
+    if (!order) {
       throw new NotFoundException(`Order with id ${payload.orderId} not found`);
     }
 
-    return customer;
+    return order;
   }
 
-  async update(payload: UpdateCustomerRequestDto & CustomerIdRequestDto) {
-    await this.checkCustomerExists(payload.customerId);
+  async update(payload: UpdateOrderRequestDto & OrderIdRequestDto) {
+    await this.checkOrderExists(payload.orderId);
 
     return this.commandBus.execute(
-      new UpdateCustomerCommand(
-        payload.customerId,
-        payload.name,
-        payload.email,
-        payload.address
+      new UpdateOrderCommand(
+        payload.orderId,
+        payload.amount,
+        payload.status
       )
     );
   }
 
-  async delete(payload: CustomerIdRequestDto) {
-    await this.checkCustomerExists(payload.customerId);
+  async delete(payload: OrderIdRequestDto) {
+    await this.checkOrderExists(payload.orderId);
 
     await this.commandBus.execute(
-      new DeleteCustomerCommand(payload.customerId)
+      new DeleteOrderCommand(payload.orderId)
     );
 
-    return { message: 'Customer deleted' };
+    return { message: 'Order deleted' };
   }
 
-  private async checkCustomerExists(orderId: string): Promise<void> {
-    const customer = await this.queryBus.execute(
-      new GetCustomerByIdQuery(orderId)
-    );
-    if (!customer) {
+  private async checkOrderExists(orderId: string): Promise<void> {
+    const order = await this.queryBus.execute(new GetOrderByIdQuery(orderId));
+    if (!order) {
       throw new NotFoundException(`Order with id ${orderId} not found`);
     }
   }

@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 
-export class CustomerIdRequestDto {
+export class OrderIdRequestDto {
     @IsString()
     @IsUUID()
     @IsNotEmpty()
-    customerId: string;
+    orderId: string;
 }
