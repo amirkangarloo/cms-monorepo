@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import {
   CreateOrderRequestDto,
@@ -33,7 +33,7 @@ export class OrderController {
     return this.orderService.getById(param);
   }
 
-  @Put(':orderId')
+  @Patch(':orderId')
   async update(
     @Param() param: OrderIdRequestDto,
     @Body() body: UpdateOrderRequestDto

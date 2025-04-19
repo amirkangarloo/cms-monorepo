@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import {
   CreateCustomerRequestDto,
@@ -33,7 +33,7 @@ export class CustomerController {
     return this.customerService.getById(param);
   }
 
-  @Put(':customerId')
+  @Patch(':customerId')
   async update(
     @Param() param: CustomerIdRequestDto,
     @Body() body: UpdateCustomerRequestDto
