@@ -1,4 +1,5 @@
 import { Controller, Get, Logger, OnModuleInit } from '@nestjs/common';
+import { Public } from 'apps/api/src/utils/decorator';
 
 @Controller({ path: 'health-check', version: '1' })
 export class HealthCheckController implements OnModuleInit {
@@ -12,6 +13,7 @@ export class HealthCheckController implements OnModuleInit {
     );
   }
 
+  @Public()
   @Get()
   healthCheck() {
     return {
