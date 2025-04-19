@@ -1,12 +1,19 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserCommand } from 'apps/api/src/domains/auth/application/commands/create-user.command';
 import {
   LoginRequestDto,
   LoginResponseDto,
+  RegisterRequestDto,
+  RegisterResponseDto,
 } from 'apps/api/src/domains/auth/application/dto';
 import { GetUserByEmailQuery } from 'apps/api/src/domains/auth/application/queries/get-user-by-email.query';
-import { comparePassword } from 'apps/api/src/utils/utilities';
+import { comparePassword, hashPassword } from 'apps/api/src/utils/utilities';
 
 @Injectable()
 export class AuthService {
@@ -32,6 +39,25 @@ export class AuthService {
       sub: user.id,
       name: user.name,
     });
+  }
+
+  async register(payload: RegisterRequestDto): Promise<RegisterResponseDto> {
+    const { password: plainPassword, email, name } = payload;
+    await this.checkEmailIsUnique(email);
+    const password = await hashPassword(plainPassword);
+
+    await this.commandBus.execute(new CreateUserCommand(name, email, password));
+
+    return { message: 'User registered successfully' };
+  }
+
+  private async checkEmailIsUnique(email: string): Promise<void> {
+    const exist = await this.commandBus.execute(new GetUserByEmailQuery(email));
+    if (exist) {
+      throw new ConflictException(
+        'Email already exists, please try another one'
+      );
+    }
   }
 
   private async jwtAccessTokenGenerate(payload: {

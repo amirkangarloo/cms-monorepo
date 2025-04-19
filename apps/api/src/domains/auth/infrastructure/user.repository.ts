@@ -7,6 +7,17 @@ import { User } from 'apps/api/src/domains/auth/domain/user.entity';
 export class UserRepository {
   constructor(private readonly prisma: DbService) {}
 
+  async create(user: Partial<User>): Promise<User> {
+    const u = await this.prisma.user.create({
+      data: {
+        email: user.email,
+        name: user.name,
+        password: user.password,
+      },
+    });
+    return this.mapToEntity(u);
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const u = await this.prisma.user.findUnique({ where: { email } });
     return u ? this.mapToEntity(u) : null;
