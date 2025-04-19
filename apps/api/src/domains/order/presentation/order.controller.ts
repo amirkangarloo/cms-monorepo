@@ -14,7 +14,7 @@ import {
 } from 'apps/api/src/domains/order/application/dto';
 import { OrderService } from 'apps/api/src/domains/order/presentation/order.service';
 
-@Controller({ path: 'orders', version: '1' })
+@Controller({ path: 'order', version: '1' })
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 

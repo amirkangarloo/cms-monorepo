@@ -3,9 +3,7 @@ import { GetUserByEmailQuery } from 'apps/api/src/domains/auth/application/queri
 import { UserRepository } from 'apps/api/src/domains/auth/infrastructure/user.repository';
 
 @QueryHandler(GetUserByEmailQuery)
-export class GetCustomerByIdHandler
-  implements IQueryHandler<GetUserByEmailQuery>
-{
+export class GetUserByEmailHandler implements IQueryHandler<GetUserByEmailQuery> {
   constructor(private readonly repository: UserRepository) {}
 
   async execute(query: GetUserByEmailQuery) {

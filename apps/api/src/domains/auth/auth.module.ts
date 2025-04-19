@@ -11,7 +11,12 @@ const commandHandlers: Provider[] = Object.values(commandHandler);
 @Module({
   imports: [],
   controllers: [AuthController],
-  providers: [AuthService, UserRepository, ...commandHandlers, ...queryHandlers],
+  providers: [
+    AuthService,
+    UserRepository,
+    ...commandHandlers,
+    ...queryHandlers,
+  ],
   exports: [],
 })
 export class AuthModule {}

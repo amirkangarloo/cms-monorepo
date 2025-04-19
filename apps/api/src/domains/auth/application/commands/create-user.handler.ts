@@ -3,9 +3,7 @@ import { CreateUserCommand } from 'apps/api/src/domains/auth/application/command
 import { UserRepository } from 'apps/api/src/domains/auth/infrastructure/user.repository';
 
 @CommandHandler(CreateUserCommand)
-export class CreateCustomerHandler
-  implements ICommandHandler<CreateUserCommand>
-{
+export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(private readonly repository: UserRepository) {}
 
   async execute(command: CreateUserCommand) {

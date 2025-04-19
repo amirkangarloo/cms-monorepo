@@ -25,7 +25,7 @@ export class AuthService {
 
   async login(payload: LoginRequestDto) {
     const { email, password } = payload;
-    const user = await this.commandBus.execute(new GetUserByEmailQuery(email));
+    const user = await this.queryBus.execute(new GetUserByEmailQuery(email));
     if (!user) {
       throw new UnauthorizedException('email or password is incorrect');
     }
@@ -52,7 +52,7 @@ export class AuthService {
   }
 
   private async checkEmailIsUnique(email: string): Promise<void> {
-    const exist = await this.commandBus.execute(new GetUserByEmailQuery(email));
+    const exist = await this.queryBus.execute(new GetUserByEmailQuery(email));
     if (exist) {
       throw new ConflictException(
         'Email already exists, please try another one'
