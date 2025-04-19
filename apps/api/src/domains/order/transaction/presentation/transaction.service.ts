@@ -53,7 +53,7 @@ export class TransactionService {
       throw new NotFoundException('Transaction not found');
     }
 
-    const paymentGateway = this.paymentGateway[
+    const paymentGateway = await this.paymentGateway[
       transaction.paymentGateway
     ].verify({
       transactionId: transaction.id,
