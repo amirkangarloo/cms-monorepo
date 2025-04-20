@@ -49,6 +49,13 @@ npm run docker:db:down
 ```
 
 ### Step 3
+Install project dependencies.
+
+```bash
+npm i
+```
+
+### Step 4
 Create DB schema by migration or db push command. (Use one of them)
 
 ```bash
@@ -67,12 +74,8 @@ You can check your database by UI in your browser on port 555 by this command.
 npm run db:view
 ```
 
-### Step 4
-Install project dependencies and run application.
-
-```bash
-npm i
-```
+### Step 5
+Run application.
 
 ```bash
 npm run api
