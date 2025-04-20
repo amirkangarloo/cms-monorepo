@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { PaymentGateway } from '@prisma/client';
+import { GetOrderByIdQuery } from 'apps/api/src/domains/order/application/queries/get-order-by-id.query';
 import { CreateTransactionCommand } from 'apps/api/src/domains/order/transaction/application/commands/create-transaction.command';
 import { UpdateTransactionCommand } from 'apps/api/src/domains/order/transaction/application/commands/update-transaction.command';
 import {
@@ -26,6 +27,8 @@ export class TransactionService {
   }
 
   async pay(payload: CreateTransactionRequestDto) {
+    await this.checkOrderExists(payload.orderId);
+
     const transaction = await this.commandBus.execute(
       new CreateTransactionCommand(
         payload.amount,
@@ -67,5 +70,12 @@ export class TransactionService {
       status: paymentGateway.status,
       transactionId: transaction.id,
     };
+  }
+
+  private async checkOrderExists(orderId: string): Promise<void> {
+    const order = await this.queryBus.execute(new GetOrderByIdQuery(orderId));
+    if (!order) {
+      throw new NotFoundException(`Order with id ${orderId} not found`);
+    }
   }
 }
