@@ -5,7 +5,7 @@ import {
   RegisterRequestDto,
 } from 'apps/api/src/domains/auth/application/dto';
 import { AuthService } from 'apps/api/src/domains/auth/presentation/auth.service';
-import { Public } from 'apps/api/src/utils/decorator';
+import { Public } from '@cms-monorepo/share';
 
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {

@@ -6,16 +6,19 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from 'apps/api/src/utils/constant';
+import { jwtConstants } from 'share/src/lib/utils/constant';
 import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private JWT_SECRET = process.env.JWT_SECRET;
+  private JWT_SECRET: string;
   constructor(
+    private readonly jwtSecret: string,
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector
-  ) {}
+  ) {
+    this.JWT_SECRET = jwtSecret;
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(

@@ -5,9 +5,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { DbModule } from 'apps/api/src/db/db.module';
 import { DomainsModule } from 'apps/api/src/domains/domains.module';
 import { HealthCheckController } from 'apps/api/src/health-check.controller';
-import { jwtConstants } from 'apps/api/src/utils/constant';
-import { AuthGuard } from 'apps/api/src/utils/guard';
-import { LoggingInterceptor } from 'apps/api/src/utils/interceptor/logging.interceptor';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from '@cms-monorepo/share';
+import { AuthGuard } from '@cms-monorepo/share';
+import { LoggingInterceptor } from '@cms-monorepo/share';
 
 @Module({
   imports: [
@@ -26,7 +28,13 @@ import { LoggingInterceptor } from 'apps/api/src/utils/interceptor/logging.inter
   providers: [
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useFactory() {
+        const reflector = new Reflector();
+        const jwtService = new JwtService();
+        const jwtSecret = process.env.JWT_SECRET;
+
+        return new AuthGuard(jwtSecret, jwtService, reflector);
+      },
     },
     {
       provide: APP_INTERCEPTOR,

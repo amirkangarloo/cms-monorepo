@@ -1,5 +1,5 @@
 import { Controller, Get, Logger, OnModuleInit } from '@nestjs/common';
-import { Public } from 'apps/api/src/utils/decorator';
+import { Public } from '@cms-monorepo/share';
 
 @Controller({ path: 'health-check', version: '1' })
 export class HealthCheckController implements OnModuleInit {

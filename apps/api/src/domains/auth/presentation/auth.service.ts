@@ -13,7 +13,7 @@ import {
   RegisterResponseDto,
 } from 'apps/api/src/domains/auth/application/dto';
 import { GetUserByEmailQuery } from 'apps/api/src/domains/auth/application/queries/get-user-by-email.query';
-import { comparePassword, hashPassword } from 'apps/api/src/utils/utilities';
+import { comparePassword, hashPassword } from '@cms-monorepo/share';
 
 @Injectable()
 export class AuthService {
