@@ -15,7 +15,7 @@ export default [
         {
           allowCircularSelfDependency: true,
           enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
+          allow: ['apps', '^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
           depConstraints: [
             {
               sourceTag: '*',

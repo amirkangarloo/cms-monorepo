@@ -10,7 +10,7 @@ import { IPaymentGateway } from 'apps/api/src/domains/order/transaction/domain/i
 
 @Injectable()
 export class StripePaymentService implements IPaymentGateway {
-  async pay(payload: PayRequestDto): Promise<PayResponseDto> {
+  async pay(_payload: PayRequestDto): Promise<PayResponseDto> {
     // TODO: Implement the logic to create a payment using Stripe
     // This is a mock implementation.
 
